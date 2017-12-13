@@ -1,4 +1,4 @@
-package com.playground.arch.britt.networkingdemo.data;
+package com.playground.arch.britt.networkingdemo.data.model;
 
 import com.google.gson.annotations.SerializedName;
 

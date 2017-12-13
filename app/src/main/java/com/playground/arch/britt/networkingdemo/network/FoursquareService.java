@@ -1,7 +1,7 @@
 package com.playground.arch.britt.networkingdemo.network;
 
-import com.playground.arch.britt.networkingdemo.data.VenuePhotosResponse;
-import com.playground.arch.britt.networkingdemo.data.VenuesResponse;
+import com.playground.arch.britt.networkingdemo.data.model.VenuePhotosResponse;
+import com.playground.arch.britt.networkingdemo.data.model.VenuesResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

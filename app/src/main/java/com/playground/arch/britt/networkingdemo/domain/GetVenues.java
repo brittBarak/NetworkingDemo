@@ -6,9 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.playground.arch.britt.networkingdemo.ObserverWithIndex;
-import com.playground.arch.britt.networkingdemo.data.VenuePhotosResponse;
-import com.playground.arch.britt.networkingdemo.data.VenuesRepository;
-import com.playground.arch.britt.networkingdemo.data.VenuesResponse;
+import com.playground.arch.britt.networkingdemo.data.model.VenuePhotosResponse;
+import com.playground.arch.britt.networkingdemo.data.repository.VenuesRepository;
+import com.playground.arch.britt.networkingdemo.data.model.VenuesResponse;
 import com.playground.arch.britt.networkingdemo.presentation.model.VenueViewModel;
 import com.playground.arch.britt.networkingdemo.presentation.utils.MutableListLiveData;
 
