@@ -1,20 +1,18 @@
 package com.playground.arch.britt.networkingdemo.presentation.VenuesList;
 
-import android.support.v7.widget.RecyclerView;
+import android.support.annotation.NonNull;
+import android.support.v7.recyclerview.extensions.DiffCallback;
+import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.playground.arch.britt.networkingdemo.R;
 import com.playground.arch.britt.networkingdemo.presentation.model.VenueViewModel;
 
-import java.util.List;
+class VenuesAdapter extends ListAdapter<VenueViewModel, VenueViewHolder> {
 
-class VenuesAdapter extends RecyclerView.Adapter<VenueViewHolder> {
-
-    private List<VenueViewModel> venues;
-
-    public VenuesAdapter(List<VenueViewModel> venues) {
-        this.venues = venues;
+    public VenuesAdapter() {
+        super(DIFF_CALLBACK);
     }
 
     @Override
@@ -25,21 +23,21 @@ class VenuesAdapter extends RecyclerView.Adapter<VenueViewHolder> {
 
     @Override
     public void onBindViewHolder(VenueViewHolder holder, int position) {
-        holder.bindViewHolder(venues.get(position));
+        holder.bindViewHolder(getItem(position));
     }
 
-    @Override
-    public int getItemCount() {
-        return venues == null ? 0 : venues.size();
-    }
 
-    public void setItems(List<VenueViewModel> newVenues) {
-        this.venues = newVenues;
-        notifyDataSetChanged();
-    }
+    public static final DiffCallback<VenueViewModel> DIFF_CALLBACK = new DiffCallback<VenueViewModel>() {
+        @Override
+        public boolean areItemsTheSame(
+                @NonNull VenueViewModel oldVenue, @NonNull VenueViewModel newVenue) {
+            return oldVenue.getId().equals(newVenue.getId());
+        }
 
-    public void setItem(int index, List<VenueViewModel> venues) {
-        this.venues = venues;
-        notifyItemChanged(index);
-    }
+        @Override
+        public boolean areContentsTheSame(
+                @NonNull VenueViewModel oldVenue, @NonNull VenueViewModel newVenue) {
+            return oldVenue.equals(newVenue);
+        }
+    };
 }

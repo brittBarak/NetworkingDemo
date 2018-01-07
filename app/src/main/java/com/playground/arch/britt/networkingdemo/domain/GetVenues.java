@@ -1,71 +1,49 @@
 package com.playground.arch.britt.networkingdemo.domain;
 
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Transformations;
+import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.playground.arch.britt.networkingdemo.ObserverWithIndex;
-import com.playground.arch.britt.networkingdemo.data.model.VenuePhotosResponse;
+import com.playground.arch.britt.networkingdemo.data.model.local.VenueLocal;
 import com.playground.arch.britt.networkingdemo.data.repository.VenuesRepository;
-import com.playground.arch.britt.networkingdemo.data.model.VenuesResponse;
 import com.playground.arch.britt.networkingdemo.presentation.model.VenueViewModel;
-import com.playground.arch.britt.networkingdemo.presentation.utils.MutableListLiveData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GetVenues {
-    VenuesRepository repository = VenuesRepository.get();
-    GetVenuePhotos getVenuePhotos = new GetVenuePhotos();
-    MutableListLiveData<VenueViewModel> viewModel = new MutableListLiveData();
+    VenuesRepository repository;
+    LiveData<List<VenueViewModel>> viewModels;
 
-    public MutableListLiveData<VenueViewModel> execute(final LifecycleOwner owner) {
-
-        Observer<VenuesResponse> observer = data -> {
-            final List<VenueViewModel> venuesVM = createVenuesViewModel(data);
-            viewModel.setItems(venuesVM);
-
-            getVenuesPhotos(venuesVM, owner);
-        };
-
-        repository.getVenues().observe(owner, observer);
-        return viewModel;
+    public GetVenues(Context context) {
+        repository = VenuesRepository.get(context);
+        LiveData<List<VenueLocal>> data = repository.getVenues();
+        viewModels = Transformations.switchMap(data, this::createVenuesViewModel);
     }
 
-    private void getVenuesPhotos(final List<VenueViewModel> venuesVM, LifecycleOwner owner) {
-        for (int i = 0; i < venuesVM.size(); i++) {
 
-            getVenuePhotos.execute(venuesVM.get(i).getId())
-                    .observe(owner, getVenuePhotosObserver(venuesVM, i));
-
-        }
-    }
-
-    @NonNull
-    private ObserverWithIndex<VenuePhotosResponse> getVenuePhotosObserver(final List<VenueViewModel> venuesVM, final int i) {
-        final VenueViewModel finalVenueViewModel = venuesVM.get(i);
-        return new ObserverWithIndex<VenuePhotosResponse>(i) {
-            @Override
-            public void onChanged(@Nullable VenuePhotosResponse venuePhotosResponse) {
-                finalVenueViewModel.setImageUrl(venuePhotosResponse.getFirstUrl());
-                viewModel.setItem(getIndex(), venuesVM.get(getIndex()));
-            }
-        };
-    }
-
-    @NonNull
-    private List<VenueViewModel> createVenuesViewModel(VenuesResponse data) {
+    private LiveData<List<VenueViewModel>> createVenuesViewModel(List<VenueLocal> list) {
+        MutableLiveData<List<VenueViewModel>> result = new MutableLiveData<>();
         List<VenueViewModel> venuesVM = new ArrayList<>();
-
-        for (VenuesResponse.Group group : data.getGroups()) {
-            for (int i = 0; i < group.getItems().size(); i++) {
-                VenuesResponse.Item item = group.getItems().get(i);
-                VenueViewModel venueViewModel = new VenueViewModel(item.getVenue().getId(), item.getVenue().getName());
-                venuesVM.add(venueViewModel);
-            }
+        VenueViewModel venueViewModel;
+        for (VenueLocal item : list) {
+            venueViewModel = createViewModel(item);
+            venuesVM.add(venueViewModel);
         }
-        return venuesVM;
+
+        result.setValue(venuesVM);
+        return result;
     }
 
+    @NonNull
+    private VenueViewModel createViewModel(VenueLocal item) {
+        return new VenueViewModel(item.originId, item.name, item.photoUrl);
+    }
+
+
+    public LiveData<List<VenueViewModel>> getLiveDataForView() {
+        return viewModels;
+    }
 }
