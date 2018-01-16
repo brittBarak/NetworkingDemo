@@ -7,7 +7,7 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 @Entity(tableName = "venues")
-public class VenueLocal {
+public class VenueData {
     @Ignore
     public static final String FOURSQUARE = "FOURSQUARE";
 
@@ -20,7 +20,7 @@ public class VenueLocal {
     public String source;
 
 
-    public VenueLocal(String id, String name, String source) {
+    public VenueData(String id, String name, String source) {
         this.originId = id;
         this.name = name;
         this.source = source;

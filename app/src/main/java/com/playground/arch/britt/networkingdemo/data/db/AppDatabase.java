@@ -5,10 +5,10 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import com.playground.arch.britt.networkingdemo.data.model.local.VenueLocal;
+import com.playground.arch.britt.networkingdemo.data.model.local.VenueData;
 
 
-@Database(entities = {VenueLocal.class}, version = 1)
+@Database(entities = {VenueData.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase{
     private static AppDatabase instance;
 

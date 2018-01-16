@@ -1,7 +1,5 @@
 package com.playground.arch.britt.networkingdemo.presentation.VenuesList;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModel;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,9 +10,7 @@ import com.playground.arch.britt.networkingdemo.AppExecutors;
 import com.playground.arch.britt.networkingdemo.R;
 import com.playground.arch.britt.networkingdemo.data.db.AppDatabase;
 import com.playground.arch.britt.networkingdemo.domain.GetVenues;
-import com.playground.arch.britt.networkingdemo.presentation.model.VenueViewModel;
-
-import java.util.List;
+import com.playground.arch.britt.networkingdemo.presentation.model.MainActivityViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
 
     MainActivityViewModel viewModel;
 
-    GetVenues getVenues;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,23 +35,16 @@ public class MainActivity extends AppCompatActivity {
         adapter = new VenuesAdapter();
         recyclerView.setAdapter(adapter);
 
-        getVenues = new GetVenues(this);
-        viewModel = new MainActivityViewModel(getVenues, "Nearby Venues");
+        viewModel = new MainActivityViewModel(new GetVenues(this), "Nearby Venues");
+        setTitle(viewModel.title);
 
         viewModel.venues.observe(this, list -> adapter.setList(list));
 
-        setTitle(viewModel.title);
+
     }
 
-    public class MainActivityViewModel extends ViewModel {
-
-        public LiveData<List<VenueViewModel>> venues;
-        public String title;
-
-
-        public MainActivityViewModel(GetVenues getVenues, String title) {
-            this.venues = getVenues.getLiveDataForView();
-            this.title = title;
-        }
+    public void onLocationChanged(double[] newLocation){
+        viewModel.location.setValue(newLocation);
     }
+
 }

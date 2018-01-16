@@ -12,24 +12,9 @@ public class AppApiClient {
         return instance;
     }
 
-    public Call<VenuesResponse> getVenues() {
-//        final MutableLiveData<VenuesResponse> data = new MutableLiveData<>();
-        String location = "32.070080,34.794145";
+    public Call<VenuesResponse> getVenues(String location) {
         return ServiceGenerator.getFoursquareService()
                 .getVenues(location);
-
-//                .enqueue(new Callback<VenuesResponse>() {
-//            @Override
-//            public void onResponse(Call<VenuesResponse> call, Response<VenuesResponse> response) {
-//                data.setValue(response.body());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<VenuesResponse> call, Throwable t) {
-//                //                handle failure
-//            }
-//        });
-//        return data;
     }
 
 

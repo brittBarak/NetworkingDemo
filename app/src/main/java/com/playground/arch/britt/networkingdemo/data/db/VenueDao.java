@@ -6,7 +6,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.playground.arch.britt.networkingdemo.data.model.local.VenueLocal;
+import com.playground.arch.britt.networkingdemo.data.model.local.VenueData;
 
 import java.util.List;
 
@@ -19,20 +19,23 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 @Dao
 public interface VenueDao {
     @Insert(onConflict = REPLACE)
-    void save(VenueLocal venue);
+    void save(VenueData venue);
 
     @Insert(onConflict = REPLACE)
-    void save(List<VenueLocal> venues);
+    void save(List<VenueData> venues);
 
-    @Query("SELECT * FROM venues")
-    LiveData<List<VenueLocal>> load();
+    @Query("SELECT * FROM VenueData")
+    LiveData<List<VenueData>> load();
 
-    @Query("SELECT * FROM venues WHERE id = :venueId")
-    LiveData<VenueLocal> load(String venueId);
+    @Query("SELECT * FROM VenueData WHERE source = :source AND originId IN(:ids)")
+    LiveData<List<VenueData>> loadByIds(String[] ids, String source);
+
+    @Query("SELECT * FROM VenueData WHERE id = :venueId")
+    LiveData<VenueData> loadVenue(String venueId);
 
     @Update(onConflict = REPLACE)
-    void updatePhotoUrl(VenueLocal venue);
+    void updatePhotoUrl(VenueData venue);
 
-    @Query("DELETE FROM venues")
+    @Query("DELETE FROM VenueData")
     void deleteAll();
 }

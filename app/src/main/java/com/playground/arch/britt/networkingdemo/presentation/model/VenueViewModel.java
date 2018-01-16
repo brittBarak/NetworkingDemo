@@ -8,7 +8,6 @@ public class VenueViewModel extends ViewModel {
     String id;
     String name;
     String imageUrl;
-//    LiveData<String> imageUrl;
 
     public VenueViewModel(String id, String name, String imageUrl) {
         this.id = id;
@@ -27,19 +26,6 @@ public class VenueViewModel extends ViewModel {
     public String getImageUrl() {
         return imageUrl;
     }
-
-//    public LiveData<String> getImageUrl() {
-//        return imageUrl;
-//    }
-
-//    public void setImageUrl(String imageUrl) {
-//        this.imageUrl.setValue(imageUrl);
-//    }
-
-//    public void setImageUrl(LiveData<String> imageUrl) {
-//        this.imageUrl = imageUrl;
-//    }
-
 
     public boolean equals(VenueViewModel other) {
         if (other == null) return false;
